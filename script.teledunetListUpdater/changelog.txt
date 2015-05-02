@@ -1,2 +1,2 @@
 [B]Version 1.0[/B]
-First version
+Add some paramerters to the m3u file to used it with the "Simple IPTV"-Plugin
