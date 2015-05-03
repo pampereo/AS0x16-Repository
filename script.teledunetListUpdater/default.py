@@ -1,7 +1,8 @@
 import xbmcgui, xbmcaddon
 import urllib2,urllib
 import cookielib
-import os,re
+import os,platform
+import re
 
 ## Variables ##
 url = 'http://www.teledunet.com/boutique/connexion.php'
@@ -25,6 +26,7 @@ label2 = ' [COLOR green](America)[/COLOR]'
 groupe2 = ' group-title="America"'
 
 Oname = df+"teledunetKodi.m3u"
+osname = platform.system()
 
 ## Functions ##
 class Main():
@@ -38,7 +40,10 @@ class Main():
             
     def cleanLogin(self):
         tmp = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        fname = tmp+"\\userdata\\addon_data\\"+addon_id+"\\settings.xml"
+        if "windows" in osname :
+            fname = tmp+"\\userdata\\addon_data\\"+addon_id+"\\settings.xml"
+        else:
+            fname = tmp+"/userdata/addon_data/"+addon_id+"/settings.xml"
         os.remove(fname)
     
     def saveData(self,name,data):
@@ -101,6 +106,7 @@ class Main():
                     out.close()
                     f1.close()
                     f2.close()
+                    print osname
                     xbmcgui.Dialog().ok(AddName,"SUCCESS","File saved under :",Oname)
                     
                 else:
