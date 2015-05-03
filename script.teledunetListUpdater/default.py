@@ -1,7 +1,6 @@
 import xbmcgui, xbmcaddon
 import urllib2,urllib
 import cookielib
-import os,platform
 import re
 
 ## Variables ##
@@ -12,64 +11,61 @@ addon_id = 'script.teledunetListUpdater'
 
 __addon__ = xbmcaddon.Addon(id=addon_id)
 df =  __addon__.getSetting("folder")
-clr = __addon__.getSetting("delsetting")
+clr = __addon__.getSetting("delsetting") == 'true'
 AddName = __addon__.getAddonInfo('name') 
 
 values = {'login_user' : __addon__.getSetting("username"),
           'pass_user' : __addon__.getSetting("password")}
 
-strKodi = ' live=true'
-label1 = ' [COLOR red](Europe)[/COLOR]'
-groupe1 = ' group-title="Europe"'
+paramKodi = ' live=true'
+name1 ='Server 1'
+label1 = ' [COLOR red](%s)[/COLOR]' % name1
+groupe1 = ' group-title="%s"' % name1
 
-label2 = ' [COLOR green](America)[/COLOR]'
-groupe2 = ' group-title="America"'
+name2 = 'Server 2'
+label2 = ' [COLOR green](%s)[/COLOR]' % name2
+groupe2 = ' group-title="%s"' % name2
 
 Oname = df+"teledunetKodi.m3u"
-osname = platform.system()
+pEXTM3U = True
 
 ## Functions ##
 class Main():
-    
-    def verifyFile(self,infile):
-        a = os.path.getsize(infile)
-        if a <= 0 :
-            return False
-        else:
-            return True
-            
+          
     def cleanLogin(self):
-        tmp = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        if "windows" in osname :
-            fname = tmp+"\\userdata\\addon_data\\"+addon_id+"\\settings.xml"
-        else:
-            fname = tmp+"/userdata/addon_data/"+addon_id+"/settings.xml"
-        os.remove(fname)
-    
-    def saveData(self,name,data):
-        f = open(name,"w")
-        f.write(data)
-        f.close()
+        __addon__.setSetting('username','')
+        __addon__.setSetting('password','')
+        __addon__.setSetting('folder','')
+        __addon__.setSetting('delsetting','false')
+
+    def processFile(self,inData,outData,wlabel,gr):
         
-    def processFile(self,infile,out,wlabel,ahead,gr):
-        if  ahead:
-            infile.readline() 
+        global pEXTM3U
         
-        for line in infile:
+        for line in inData:
             x = ''.join(line).rstrip()
-            if "#EXTM3U" in x:
-                out.write(x+"\n")
-                continue
+            if "#EXTM3U" in x :
+                if pEXTM3U :
+                    pEXTM3U = False
+                    outData.write(x+"\n")
+                    continue 
+                else :
+                    continue
             elif "#EXTINF" in x:
                 me = re.search("(.*),(.*)", x)
                 x = me.group(1)+gr+","+me.group(2)+wlabel
-                #x = x + wlabel
+                outData.write(x+"\n")  
             else :
-                x = x + strKodi
-                
-            out.write(x+"\n")
+                x = x + paramKodi
+                outData.write(x+"\n") 
     
-    def go(self):   
+    def go(self):
+        
+        if clr :
+            self.cleanLogin()
+            xbmcgui.Dialog().ok(AddName,"Setting deleted !!")
+            exit()
+         
         data = urllib.urlencode(values)
         cookies = cookielib.CookieJar()
         opener = urllib2.build_opener(
@@ -79,50 +75,24 @@ class Main():
                       urllib2.HTTPCookieProcessor(cookies))
         
         response = opener.open(url, data)
-        the_page = response.read()
-        http_headers = response.info()
+        #the_page = response.read()
+        #http_headers = response.info()
          
         try:
-                data1 = opener.open(down_url1).read()
-                data2 = opener.open(down_url2).read()
+                data1 = opener.open(down_url1).readlines()
+                data2 = opener.open(down_url2).readlines() 
+                out = open(Oname,"w")                
+                  
+                self.processFile(data1, out, label1, groupe1) 
+                self.processFile(data2, out, label2, groupe2)
+                    
+                out.close()
                 
-                self.saveData(df+"f1.tmp", data1)
-                self.saveData(df+"f2.tmp", data2)
+                xbmcgui.Dialog().ok(AddName,"SUCCESS","File saved under :",Oname)
                 
-                if self.verifyFile(df+"f1.tmp") or self.verifyFile(df+"f2.tmp"):
-                    
-                    if self.verifyFile(df+"f1.tmp"):
-                        ahead = False
-                    else:
-                        ahead = True
-                    
-                    out = open(Oname,"w")                
-                    f1 = open(df+"f1.tmp","r")
-                    f2 = open(df+"f2.tmp","r")
-            
-                    self.processFile(f1, out, label1, ahead, groupe1) 
-                    self.processFile(f2, out, label2, not ahead, groupe2)
-                   
-                    out.close()
-                    f1.close()
-                    f2.close()
-                    print osname
-                    xbmcgui.Dialog().ok(AddName,"SUCCESS","File saved under :",Oname)
-                    
-                else:
-                    xbmcgui.Dialog().ok(AddName,"Verify your Username/password")
         except:
                 xbmcgui.Dialog().ok(AddName,"Verify your Login/network Settings")
-                
-        # cleaning part
-        try:
-                os.remove(df+"f1.tmp")
-                os.remove(df+"f2.tmp")
-                if clr == "true":
-                    self.cleanLogin()
-        except:
-                xbmcgui.Dialog().ok(AddName,"TMP Files not available")
-        
+
                     
 if ( __name__ == "__main__" ):
     Main().go()
