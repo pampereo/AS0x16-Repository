@@ -9,5 +9,8 @@
         <summary>AS0x16 Plugins Collection</summary>
         <description>Misc Plugins</description>
         <platform>all</platform>
+		<language>en</language>
+		<email>aymsai@hotmail.com</email>
+		<disclaimer>For issues visit my GitHub Repo on https://github.com/pampereo/AS0x16-Repository</disclaimer>
     </extension>
 </addon>
