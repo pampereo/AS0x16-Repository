@@ -1,2 +1,2 @@
 # AS0x16 XBMC/KODI plugins
-under construction
+My Space to develop XBMC/KODI Plugins
