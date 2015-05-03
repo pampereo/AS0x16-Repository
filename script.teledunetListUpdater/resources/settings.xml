@@ -5,4 +5,7 @@
         <setting label="Password" type="text" id="password" option="hidden" default=""/>
         <setting label="Download Path" type="folder" id="folder" source="files" option="writeable"/>
     </category>
+        <category label="Clean">
+        <setting label="Delete Settings|Login [COLOR red]  (only if you are sure !!!)[/COLOR]" type="bool" id="delsetting" default="false"/>
+    </category>
 </settings>

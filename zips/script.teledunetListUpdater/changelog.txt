@@ -1,1 +1,4 @@
-[B]Version 1.0[/B]
+[B]Version 1.0.0[/B]
+Add some paramerters to the m3u file to used it with the "Simple IPTV"-Plugin
+[B]Version 1.0.1[/B]
+Option "Delete Settings/Login" added

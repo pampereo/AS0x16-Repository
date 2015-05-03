@@ -1,16 +1,17 @@
 import xbmcgui, xbmcaddon
 import urllib2,urllib
 import cookielib
-import os
+import os,re
 
 ## Variables ##
 url = 'http://www.teledunet.com/boutique/connexion.php'
 down_url2 = 'http://www.teledunet.com/download.php?name=TeledunetAmerica&america'
 down_url1 = 'http://www.teledunet.com/download.php?name=TeledunetEurope&europe'
-
 addon_id = 'script.teledunetListUpdater'
+
 __addon__ = xbmcaddon.Addon(id=addon_id)
 df =  __addon__.getSetting("folder")
+clr = __addon__.getSetting("delsetting")
 AddName = __addon__.getAddonInfo('name') 
 
 values = {'login_user' : __addon__.getSetting("username"),
@@ -18,7 +19,11 @@ values = {'login_user' : __addon__.getSetting("username"),
 
 strKodi = ' live=true'
 label1 = ' [COLOR red](Europe)[/COLOR]'
+groupe1 = ' group-title="Europe"'
+
 label2 = ' [COLOR green](America)[/COLOR]'
+groupe2 = ' group-title="America"'
+
 Oname = df+"teledunetKodi.m3u"
 
 ## Functions ##
@@ -31,16 +36,17 @@ class Main():
         else:
             return True
             
-    #todo
     def cleanLogin(self):
-        return
+        tmp = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        fname = tmp+"\\userdata\\addon_data\\"+addon_id+"\\settings.xml"
+        os.remove(fname)
     
     def saveData(self,name,data):
         f = open(name,"w")
         f.write(data)
         f.close()
         
-    def processFile(self,infile,out,wlabel,ahead):
+    def processFile(self,infile,out,wlabel,ahead,gr):
         if  ahead:
             infile.readline() 
         
@@ -50,7 +56,9 @@ class Main():
                 out.write(x+"\n")
                 continue
             elif "#EXTINF" in x:
-                x = x + wlabel
+                me = re.search("(.*),(.*)", x)
+                x = me.group(1)+gr+","+me.group(2)+wlabel
+                #x = x + wlabel
             else :
                 x = x + strKodi
                 
@@ -87,8 +95,8 @@ class Main():
                     f1 = open(df+"f1.tmp","r")
                     f2 = open(df+"f2.tmp","r")
             
-                    self.processFile(f1, out, label1, ahead) 
-                    self.processFile(f2, out, label2, not ahead)
+                    self.processFile(f1, out, label1, ahead, groupe1) 
+                    self.processFile(f2, out, label2, not ahead, groupe2)
                    
                     out.close()
                     f1.close()
@@ -104,6 +112,8 @@ class Main():
         try:
                 os.remove(df+"f1.tmp")
                 os.remove(df+"f2.tmp")
+                if clr == "true":
+                    self.cleanLogin()
         except:
                 xbmcgui.Dialog().ok(AddName,"TMP Files not available")
         
