@@ -5,7 +5,15 @@
         <setting label="Password" type="text" id="password" option="hidden" default=""/>
         <setting label="Download Path" type="folder" id="folder" source="files" option="writeable"/>
     </category>
-        <category label="Clean">
+    <category label="Costum">
+        <setting id="colSrv1" type="select" label="Color Srv1" values="red|green|blue|yellow" default="yellow"/>
+        <setting id="colSrv2" type="select" label="Color Srv2" values="red|green|blue|yellow" default="blue"/>
+        <setting label="Server 1 Name" type="text" id="srv1Name" default="Srv1" visible="false"/>
+        <setting label="Server 2 Name" type="text" id="srv2Name" default="Srv2" visible="false"/>
+        <setting label="Kodi Parameter" type="text" id="paramKodi" default=" live=true" visible="false"/>
+        <setting label="Output Name" type="text" id="oname" default="teledunetKodi.m3u" visible="false"/>
+    </category>
+    <category label="Clean">
         <setting label="Delete Settings|Login [COLOR red]  (only if you are sure !!!)[/COLOR]" type="bool" id="delsetting" default="false"/>
     </category>
 </settings>

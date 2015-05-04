@@ -1,15 +1,15 @@
-import xbmcgui, xbmcaddon
+import xbmc,xbmcgui,xbmcaddon
 import urllib2,urllib
 import cookielib
 import re
 
-## Variables ##
+
 url = 'http://www.teledunet.com/boutique/connexion.php'
 down_url2 = 'http://www.teledunet.com/download.php?name=TeledunetAmerica&america'
 down_url1 = 'http://www.teledunet.com/download.php?name=TeledunetEurope&europe'
 addon_id = 'script.teledunetListUpdater'
 
-__addon__ = xbmcaddon.Addon(id=addon_id)
+__addon__ = xbmcaddon.Addon(addon_id)
 df =  __addon__.getSetting("folder")
 clr = __addon__.getSetting("delsetting") == 'true'
 AddName = __addon__.getAddonInfo('name') 
@@ -17,19 +17,20 @@ AddName = __addon__.getAddonInfo('name')
 values = {'login_user' : __addon__.getSetting("username"),
           'pass_user' : __addon__.getSetting("password")}
 
-paramKodi = ' live=true'
-name1 ='Server 1'
-label1 = ' [COLOR red](%s)[/COLOR]' % name1
-groupe1 = ' group-title="%s"' % name1
+paramKodi = __addon__.getSetting("paramKodi")
+Oname = df+__addon__.getSetting("oname")
+name1 = __addon__.getSetting("srv1Name")
+name2 = __addon__.getSetting("srv2Name")
+colSrv1 = __addon__.getSetting("colSrv1")
+colSrv2 = __addon__.getSetting("colSrv2")
 
-name2 = 'Server 2'
-label2 = ' [COLOR green](%s)[/COLOR]' % name2
+label1 = ' [COLOR %s](%s)[/COLOR]' % (colSrv1,name1)
+groupe1 = ' group-title="%s"' % name1
+label2 = ' [COLOR %s](%s)[/COLOR]' % (colSrv2,name2)
 groupe2 = ' group-title="%s"' % name2
 
-Oname = df+"teledunetKodi.m3u"
 pEXTM3U = True
 
-## Functions ##
 class Main():
           
     def cleanLogin(self):
@@ -87,9 +88,11 @@ class Main():
                 self.processFile(data2, out, label2, groupe2)
                     
                 out.close()
-                
-                xbmcgui.Dialog().ok(AddName,"SUCCESS","File saved under :",Oname)
-                
+                opener.close()
+                cookies.clear_expired_cookies()
+                cookies.clear_session_cookies()
+                                
+                xbmc.executebuiltin('Notification(%s, %s)'%("File saved under: ", Oname))
         except:
                 xbmcgui.Dialog().ok(AddName,"Verify your Login/network Settings")
 
