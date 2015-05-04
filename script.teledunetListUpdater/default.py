@@ -3,7 +3,6 @@ import urllib2,urllib
 import cookielib
 import re
 
-
 url = 'http://www.teledunet.com/boutique/connexion.php'
 down_url2 = 'http://www.teledunet.com/download.php?name=TeledunetAmerica&america'
 down_url1 = 'http://www.teledunet.com/download.php?name=TeledunetEurope&europe'
@@ -18,7 +17,7 @@ values = {'login_user' : __addon__.getSetting("username"),
           'pass_user' : __addon__.getSetting("password")}
 
 paramKodi = __addon__.getSetting("paramKodi")
-Oname = df+__addon__.getSetting("oname")
+Oname = df + __addon__.getSetting("oname")
 name1 = __addon__.getSetting("srv1Name")
 name2 = __addon__.getSetting("srv2Name")
 colSrv1 = __addon__.getSetting("colSrv1")
@@ -80,21 +79,35 @@ class Main():
         #http_headers = response.info()
          
         try:
-                data1 = opener.open(down_url1).readlines()
-                data2 = opener.open(down_url2).readlines() 
-                out = open(Oname,"w")                
-                  
-                self.processFile(data1, out, label1, groupe1) 
-                self.processFile(data2, out, label2, groupe2)
+            data1 = opener.open(down_url1).readlines()
+            data2 = opener.open(down_url2).readlines() 
+            out = open(Oname,"w")                
+              
+            self.processFile(data1, out, label1, groupe1) 
+            self.processFile(data2, out, label2, groupe2)
+            
+            ## Cleaning  
+            out.close() 
+            opener.close()
+            cookies.clear_expired_cookies()
+            cookies.clear_session_cookies()
+            
+            xbmc.executebuiltin('Notification(%s, %s)'%("File saved under: ", Oname))
+            
+            ret = xbmcgui.Dialog().yesno(AddName,'Restart Now?')
+            if ret :
+                xbmc.executebuiltin('RestartApp')
                     
-                out.close()
-                opener.close()
-                cookies.clear_expired_cookies()
-                cookies.clear_session_cookies()
-                                
-                xbmc.executebuiltin('Notification(%s, %s)'%("File saved under: ", Oname))
         except:
-                xbmcgui.Dialog().ok(AddName,"Verify your Login/network Settings")
+        
+            opener.close()
+            cookies.clear_expired_cookies()
+            cookies.clear_session_cookies()
+            
+            ret = xbmcgui.Dialog().yesno(AddName,"Verify your Login/network Settings","Do you want to open the Settings Window ?")
+            
+            if ret :
+                xbmc.executebuiltin('xbmc.ReplaceWindow(addonsettings)')
 
                     
 if ( __name__ == "__main__" ):
