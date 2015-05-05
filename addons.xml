@@ -52,6 +52,26 @@
 	</extension>
 </addon>
 
+<addon id="script.mxqboxupdater"
+       name="[COLOR red]{Only MXQ Box}[/COLOR]Box Updater"
+       version="1.0.1"
+       provider-name="AS0x16">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>executable</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">MXQ Updater</summary>
+    <description lang="en">MXQ Updater to Openelec v 5.0.8 , [COLOR red]only MQX BOX (see the picture)[/COLOR]</description>
+    <platform>all</platform>
+    <language>en</language>
+    <email>aymsai@hotmail.com</email>
+    <disclaimer>For issues visit my GitHub Repo on https://github.com/pampereo/AS0x16-Repository</disclaimer>
+  </extension>
+</addon>
+
 <addon id="script.teledunetListUpdater"
        name="Teledunet List Updater"
        version="1.0.41"
