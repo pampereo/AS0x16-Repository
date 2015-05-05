@@ -6,3 +6,5 @@ Option "Delete Settings/Login" added
 script optimized
 [B]Version 1.0.3[/B]
 Some improvements
+[B]Version 1.0.4[/B]
+Some improvements

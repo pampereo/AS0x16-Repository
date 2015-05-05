@@ -14,6 +14,7 @@
         <setting label="Output Name" type="text" id="oname" default="teledunetKodi.m3u" visible="false"/>
     </category>
     <category label="Clean">
-        <setting label="Delete Settings|Login [COLOR red]  (only if you are sure !!!)[/COLOR]" type="bool" id="delsetting" default="false"/>
+        <setting label="Delete Login [COLOR red]  (only if you are sure !!!)[/COLOR]" type="bool" id="dellogin" default="false"/>
+        <setting label="Delete Settings [COLOR red]  (only if you are sure !!!)[/COLOR]" type="bool" id="delsetting" default="false"/>
     </category>
 </settings>
