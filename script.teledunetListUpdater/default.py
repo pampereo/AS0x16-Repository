@@ -113,9 +113,9 @@ class Main():
             
             xbmc.executebuiltin('Notification(%s, %s)'%("File saved under: ", Oname))
             
-            ret = xbmcgui.Dialog().yesno(AddName,'Restart Now?')
+            ret = xbmcgui.Dialog().yesno(AddName,'Restart Now?','[COLOR red]The entire System will reboot !!![/COLOR]')
             if ret :
-                xbmc.executebuiltin('RestartApp')
+                xbmc.executebuiltin('Reboot')
                     
         except:
         
