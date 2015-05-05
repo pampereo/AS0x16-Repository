@@ -54,7 +54,7 @@
 
 <addon id="script.teledunetListUpdater"
        name="Teledunet List Updater"
-       version="1.0.4"
+       version="1.0.41"
        provider-name="AS0x16">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
