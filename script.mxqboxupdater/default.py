@@ -5,7 +5,8 @@ import xbmcaddon,xbmcgui,xbmc,os
 url = 'https://github.com/kszaq/OpenELEC.tv/releases/download/5.0.8p7/OpenELEC-Amlogic.MXQ.arm-5.0.8-20150501.tar'
 addon_id = 'script.mxqboxupdater'
 dpath = '/storage/.update/'
-#dpath = 'C:\update.tar'
+dfile = 'update.tar'
+#dpath = 'C:\'
 __addon__ = xbmcaddon.Addon(addon_id)
 AddName = __addon__.getAddonInfo('name') 
 
@@ -32,7 +33,7 @@ class Main():
                 pDialog.update(10*i, 'Downloading process','Please wait !!')
                 xbmc.sleep(sleeptm)
                 
-            savefile = open(dpath,'wb')
+            savefile = open(dpath+dfile,'wb')
             savefile.write(tarfile.read())
             savefile.close()
             pDialog.close()
