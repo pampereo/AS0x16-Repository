@@ -3,7 +3,6 @@
        name="[COLOR red]{Only MXQ Box}[/COLOR] OpenElec Arabic IPTV initiator"
        version="1.0.1"
        provider-name="AS0x16">
-  <broken>Under Construction</broken>
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
   </requires>
@@ -17,6 +16,7 @@
     <language>en</language>
     <email>aymsai@hotmail.com</email>
     <disclaimer>For issues visit my GitHub Repo on https://github.com/pampereo/AS0x16-Repository</disclaimer>
+	<broken>Under Construction</broken>
   </extension>
   
 </addon>
