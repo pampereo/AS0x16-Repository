@@ -33,16 +33,16 @@ class Main():
         pDialog.create(AddName, 'Downloading process','Please wait !!')
         tarfile = urllib2.urlopen(url)
        
-        with open(dpath+dfile, 'wb') as fp:
-            i = 1
-            while True:
-                if pDialog.iscanceled():
-                        exit()
-                chunk = tarfile.read(CHUNKsize)
-                if len(chunk) == 0: break
-                fp.write(chunk)
-                pDialog.update(10*i, 'Downloading process','Please wait !!')
-                i = i + 1
+        fp = open(dpath+dfile, 'wb')
+        i = 1
+        while True:
+            if pDialog.iscanceled():
+                    exit()
+            chunk = tarfile.read(CHUNKsize)
+            if len(chunk) == 0: break
+            fp.write(chunk)
+            pDialog.update(10*i, 'Downloading process','Please wait !!')
+            i = i + 1
         
         fp.close()            
         pDialog.close()

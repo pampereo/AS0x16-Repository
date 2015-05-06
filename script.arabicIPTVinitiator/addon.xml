@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.arabicIPTVinitiator"
        name="[COLOR red]{Only MXQ Box}[/COLOR] OpenElec Arabic IPTV initiator"
-       version="1.0.0"
+       version="1.0.1"
        provider-name="AS0x16">
+  <broken>Under Construction</broken>
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
   </requires>
@@ -11,10 +12,11 @@
   </extension>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">MXQ Updater</summary>
-    <description lang="en">OpenElec initiator for Arabic IPTV eka. ShahidMBC by Shani , [COLOR red]only MQX BOX (see the picture)[/COLOR]</description>
+    <description lang="en">OpenElec initiator for Arabic IPTV eka. ShahidMBC by Shani , [COLOR red]only MXQ BOX (see the picture)[/COLOR]</description>
     <platform>all</platform>
     <language>en</language>
     <email>aymsai@hotmail.com</email>
     <disclaimer>For issues visit my GitHub Repo on https://github.com/pampereo/AS0x16-Repository</disclaimer>
   </extension>
+  
 </addon>
