@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.mxqboxupdater"
-       name="[COLOR red]{Only MXQ Box}[/COLOR]Box Updater"
+       name="[COLOR red]{Only MXQ Box}[/COLOR] Box Updater"
        version="1.0.1"
        provider-name="AS0x16">
   <requires>

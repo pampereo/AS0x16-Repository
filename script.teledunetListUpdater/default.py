@@ -84,7 +84,7 @@ class Main():
             self.clearLogin()
             xbmcgui.Dialog().ok(AddName,"Login deleted !!")
             exit()
-            
+          
         data = urllib.urlencode(values)
         cookies = cookielib.CookieJar()
         opener = urllib2.build_opener(
@@ -93,9 +93,7 @@ class Main():
                       urllib2.HTTPSHandler(debuglevel=0),
                       urllib2.HTTPCookieProcessor(cookies))
         
-        response = opener.open(url, data)
-        #the_page = response.read()
-        #http_headers = response.info()
+        opener.open(url, data)
          
         try:
             data1 = opener.open(down_url1).readlines()
@@ -126,8 +124,8 @@ class Main():
             ret = xbmcgui.Dialog().yesno(AddName,"Verify your Login/network Settings","Do you want to open the Settings Window ?")
             
             if ret :
-                xbmc.executebuiltin('xbmc.ReplaceWindow(addonsettings)')
+                __addon__.openSettings()
+                #xbmc.executebuiltin('xbmc.ReplaceWindow(addonsettings)')
 
-                    
 if ( __name__ == "__main__" ):
     Main().go()
