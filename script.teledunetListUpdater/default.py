@@ -2,11 +2,15 @@ import xbmc,xbmcgui,xbmcaddon
 import urllib2,urllib
 import cookielib
 import re
+import random
 
-url = 'http://www.teledunet.com/boutique/connexion.php'
-down_url2 = 'http://www.teledunet.com/download.php?name=TeledunetAmerica&america'
-down_url1 = 'http://www.teledunet.com/download.php?name=TeledunetEurope&europe'
 addon_id = 'script.teledunetListUpdater'
+url = 'http://www.teledunet.com/boutique/connexion.php'
+urllist = (['http://www.teledunet.com/download.php?name=TeledunetGermany&germany',
+           'http://www.teledunet.com/download.php?name=TeledunetEurope&europe',
+           'http://www.teledunet.com/download.php?name=TeledunetAmerica&america'])
+
+colorlist = (['red','green','blue','yellow'])
 
 __addon__ = xbmcaddon.Addon(addon_id)
 df =  __addon__.getSetting("folder")
@@ -19,15 +23,6 @@ values = {'login_user' : __addon__.getSetting("username"),
 
 paramKodi = __addon__.getSetting("paramKodi")
 Oname = df + __addon__.getSetting("oname")
-name1 = __addon__.getSetting("srv1Name")
-name2 = __addon__.getSetting("srv2Name")
-colSrv1 = __addon__.getSetting("colSrv1")
-colSrv2 = __addon__.getSetting("colSrv2")
-
-label1 = ' [COLOR %s](%s)[/COLOR]' % (colSrv1,name1)
-groupe1 = ' group-title="%s"' % name1
-label2 = ' [COLOR %s](%s)[/COLOR]' % (colSrv2,name2)
-groupe2 = ' group-title="%s"' % name2
 
 pEXTM3U = True
 
@@ -40,10 +35,6 @@ class Main():
         __addon__.setSetting('dellogin','false')
         
     def cleanSetting(self):
-        __addon__.setSetting('colSrv1','yellow')
-        __addon__.setSetting('colSrv2','blue')
-        __addon__.setSetting('srv1Name','Srv1')
-        __addon__.setSetting('srv2Name','Srv2')
         __addon__.setSetting('paramKodi',' live=true')
         __addon__.setSetting('oname','teledunetKodi.m3u')
         __addon__.setSetting('delsetting','false')
@@ -84,6 +75,10 @@ class Main():
             self.clearLogin()
             xbmcgui.Dialog().ok(AddName,"Login deleted !!")
             exit()
+            
+        if len(colorlist) < len(urllist):
+            xbmcgui.Dialog().ok(AddName,"not enough colors !!","Add some colors to list !!")
+            exit()
           
         data = urllib.urlencode(values)
         cookies = cookielib.CookieJar()
@@ -96,12 +91,25 @@ class Main():
         opener.open(url, data)
          
         try:
-            data1 = opener.open(down_url1).readlines()
-            data2 = opener.open(down_url2).readlines() 
-            out = open(Oname,"w")                
-            
-            self.processFile(data1, out, label1, groupe1) 
-            self.processFile(data2, out, label2, groupe2)
+            out = open(Oname,"w")
+            usedColor = ([])
+            for i in range(len(urllist)) :
+                dataurl = opener.open(urllist[i]).readlines()
+                if dataurl is None:
+                    continue
+                
+                srvname = 'Srv%s' % str(i+1)
+                srvcolor = random.choice(colorlist)
+                while srvcolor in usedColor :
+                    srvcolor = random.choice(colorlist)
+                    print 'color in'
+                usedColor.append(srvcolor)
+                
+                srvlabel = ' [COLOR %s](%s)[/COLOR]' % (srvcolor,srvname)
+                srvgrp = ' group-title="%s"' % srvname
+                
+                self.processFile(dataurl, out, srvlabel, srvgrp)
+                
             
             ## Cleaning  
             out.close() 
@@ -125,7 +133,6 @@ class Main():
             
             if ret :
                 __addon__.openSettings()
-                #xbmc.executebuiltin('xbmc.ReplaceWindow(addonsettings)')
 
 if ( __name__ == "__main__" ):
     Main().go()
