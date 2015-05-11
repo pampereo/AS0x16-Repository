@@ -76,7 +76,7 @@
 
 <addon id="script.mxqboxupdater"
        name="[COLOR red]{Only MXQ Box}[/COLOR] Box Updater"
-       version="1.0.1"
+       version="1.0.2"
        provider-name="AS0x16">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -86,7 +86,7 @@
   </extension>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">MXQ Updater</summary>
-    <description lang="en">MXQ Updater to Openelec v 5.0.8 , [COLOR red]only MQX BOX (see the picture)[/COLOR]</description>
+    <description lang="en">MXQ Updater to Openelec v 5.0.8 , [COLOR red]only MXQ BOX (see the picture)[/COLOR]</description>
     <platform>all</platform>
     <language>en</language>
     <email>aymsai@hotmail.com</email>
@@ -95,8 +95,8 @@
 </addon>
 
 <addon id="script.teledunetListUpdater"
-       name="Teledunet List Updater"
-       version="1.0.43"
+       name="[COLOR green]Teledunet List Updater[/COLOR]"
+       version="1.0.44"
        provider-name="AS0x16">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>

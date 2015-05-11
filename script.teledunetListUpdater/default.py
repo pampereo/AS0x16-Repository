@@ -1,16 +1,14 @@
 import xbmc,xbmcgui,xbmcaddon
-import urllib2,urllib
-import cookielib
-import re
-import random
+import urllib2,urllib,cookielib
+import re,random
 
 addon_id = 'script.teledunetListUpdater'
 url = 'http://www.teledunet.com/boutique/connexion.php'
 urllist = (['http://www.teledunet.com/download.php?name=TeledunetGermany&germany',
-           'http://www.teledunet.com/download.php?name=TeledunetEurope&europe',
-           'http://www.teledunet.com/download.php?name=TeledunetAmerica&america'])
+            'http://www.teledunet.com/download.php?name=TeledunetEurope&europe',
+            'http://www.teledunet.com/download.php?name=TeledunetAmerica&america'])
 
-colorlist = (['red','green','blue','yellow'])
+colorlist = (['red','green','blue','yellow','pink','orange','gray','violet'])
 
 __addon__ = xbmcaddon.Addon(addon_id)
 df =  __addon__.getSetting("folder")
@@ -27,7 +25,7 @@ Oname = df + __addon__.getSetting("oname")
 pEXTM3U = True
 
 class Main():
-          
+    
     def clearLogin(self):
         __addon__.setSetting('username','')
         __addon__.setSetting('password','')
@@ -75,11 +73,11 @@ class Main():
             self.clearLogin()
             xbmcgui.Dialog().ok(AddName,"Login deleted !!")
             exit()
-            
-        if len(colorlist) < len(urllist):
-            xbmcgui.Dialog().ok(AddName,"not enough colors !!","Add some colors to list !!")
-            exit()
-          
+
+        usedColor = ([])
+        procent = 100/(len(urllist)+1)
+        pDialog = xbmcgui.DialogProgress()
+        
         data = urllib.urlencode(values)
         cookies = cookielib.CookieJar()
         opener = urllib2.build_opener(
@@ -87,31 +85,38 @@ class Main():
                       urllib2.HTTPHandler(debuglevel=0),
                       urllib2.HTTPSHandler(debuglevel=0),
                       urllib2.HTTPCookieProcessor(cookies))
-        
-        opener.open(url, data)
-         
+        ret = opener.open(url, data)
+
         try:
             out = open(Oname,"w")
-            usedColor = ([])
+            pDialog.create(AddName, 'Status : ')
+            pDialog.update(procent, 'Status : connecting to teledunet')
             for i in range(len(urllist)) :
+                
+                x = opener.open(urllist[i]).headers.get('Content-Disposition')
+                me = re.search("(.*); filename=(.*)",x)
+                line2 = '\rFile : %s' % me.group(2)
+                
                 dataurl = opener.open(urllist[i]).readlines()
                 if dataurl is None:
                     continue
-                
                 srvname = 'Srv%s' % str(i+1)
                 srvcolor = random.choice(colorlist)
-                while srvcolor in usedColor :
-                    srvcolor = random.choice(colorlist)
-                    print 'color in'
+                
+                if len(usedColor) <= len(colorlist)-1 :
+                    while srvcolor in usedColor :
+                        srvcolor = random.choice(colorlist)
+
                 usedColor.append(srvcolor)
                 
                 srvlabel = ' [COLOR %s](%s)[/COLOR]' % (srvcolor,srvname)
                 srvgrp = ' group-title="%s"' % srvname
                 
                 self.processFile(dataurl, out, srvlabel, srvgrp)
+                pDialog.update(procent*(i+2), 'Status : downloaded (%s/%s)' % (str(i+1),len(urllist)),line2)
                 
-            
-            ## Cleaning  
+            ## Cleaning 
+            pDialog.close() 
             out.close() 
             opener.close()
             cookies.clear_expired_cookies()
@@ -122,9 +127,10 @@ class Main():
             ret = xbmcgui.Dialog().yesno(AddName,'Restart Now?','[COLOR red]The entire System will reboot !!![/COLOR]')
             if ret :
                 xbmc.executebuiltin('Reboot')
+            else :
+                xbmcgui.Dialog().ok(AddName, 'Restart Kodi manually or Reset your channellist.')
                     
         except:
-        
             opener.close()
             cookies.clear_expired_cookies()
             cookies.clear_session_cookies()

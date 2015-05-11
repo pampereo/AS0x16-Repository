@@ -12,3 +12,5 @@ Some improvements
 Some Corrections
 [B]Version 1.0.43[/B]
 Germany server added, some corrections
+[B]Version 1.0.44[/B]
+minor changes

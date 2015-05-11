@@ -1,2 +1,4 @@
 [B]Version 1.0.1[/B]
 First release : update to v5.0.8, thanks @ kszaq (github)
+[B]Version 1.0.2[/B]
+update to v5.0.8 , date 11.05.2015

@@ -1,16 +1,18 @@
-import urllib2
+import urllib2,time,os
 import xbmcaddon,xbmcgui,xbmc
 
-url = 'https://github.com/kszaq/OpenELEC.tv/releases/download/5.0.8p7/OpenELEC-Amlogic.MXQ.arm-5.0.8-20150501.tar'
+## MXQ OpeneElec URL Library
+#url = 'https://github.com/kszaq/OpenELEC.tv/releases/download/5.0.8p1/OpenELEC-Amlogic.MXQ.arm-5.0.8-20150409.tar'
+url = 'https://github.com/kszaq/OpenELEC.tv/releases/download/5.0.8p8/OpenELEC-Amlogic.MXQ.arm-5.0.8-20150511.tar'
 
 addon_id = 'script.mxqboxupdater'
-dpath = '/storage/.update/'
-dfile = 'update.tar'
-
-CHUNKsize = 16 * 1024
-
 __addon__ = xbmcaddon.Addon(addon_id)
 AddName = __addon__.getAddonInfo('name') 
+
+dpath = '/storage/.update'
+
+CHUNKsize = 1024
+cvMpsBps = 1048576
 
 class Main():
           
@@ -26,21 +28,44 @@ class Main():
         
         if mxq :
             pDialog = xbmcgui.DialogProgress()
-            pDialog.create(AddName, 'Downloading process','Please wait !!')
-            tarfile = urllib2.urlopen(url)
-           
-            with open(dpath+dfile, 'wb') as fp:
-                i = 1
-                while True:
-                    if pDialog.iscanceled():
-                        exit()
-                    chunk = tarfile.read(CHUNKsize)
-                    if len(chunk) == 0: break
-                    fp.write(chunk)
-                    pDialog.update(10*i, 'Downloading process','Please wait !!')
-                    i = i + 1
+            pDialog.create(AddName, 'Downloading ... Please wait !!')
             
-            fp.close()            
+            localFilename = url.split('/')[-1]
+            with open(dpath + '/' + localFilename, 'wb') as f:
+                start = time.clock()
+                r = urllib2.urlopen(url)
+                total_length = r.headers.get('content-length')
+                print total_length
+                dl = 0
+                if total_length is None:
+                    f.write(r.content)
+                else:
+                    while True:
+                        if pDialog.iscanceled():
+                            f.close()
+                            pDialog.close()
+                            os.remove(dpath + '/' + localFilename)
+                            exit()
+                        chunk = r.read(CHUNKsize)
+                        if len(chunk) == 0: 
+                            if int(dl) != int(total_length):
+                                line = '[Downloaded %s from %s]' % (dl,total_length)
+                                xbmcgui.Dialog().ok(AddName, 'Error is occured',line,'[COLOR red]Try to download again !![/COLOR]')
+                                f.close()
+                                pDialog.close()
+                                os.remove(dpath + '/' + localFilename)
+                                exit()
+                            break
+                        dl += len(chunk)
+                        f.write(chunk)
+                        done = int(100 * dl / int(total_length))
+                        
+                        line1 = 'Downloading ... Please wait !! '
+                        line2 = 'Filename:[COLOR red] %s[/COLOR]' % localFilename
+                        line3 = '\r[%s from %s] @ %s Mb/sec' % (dl,total_length,float("{0:.2f}".format(dl//(time.clock() - start)/cvMpsBps)))
+                        pDialog.update(done,line1,line2,line3)
+            
+            f.close()            
             pDialog.close()
             
             req = xbmcgui.Dialog().yesno(AddName,'Reboot now ??')
